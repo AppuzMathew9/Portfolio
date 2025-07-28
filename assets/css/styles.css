@@ -1,6 +1,9 @@
-@import 'normalize.css';
-
 /* Your custom styles below */
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Adjust this value based on your navbar height */
+}
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,10 +17,6 @@ body {
 header {
     position: relative;
     min-height: 100vh;
-    background-image: url('assets/images/project-placeholder.jpg'); /* Replace with your actual image filename */
-    background-size: cover;
-    background-position: center;
-    color: #5a4a2e; /* Adjust text color to match the image tone */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,6 +24,8 @@ header {
     text-align: center;
     padding: 2rem;
     z-index: 1;
+    /* Remove the background-image from header */
+    background-image: none;
 }
 
 .hero-background {
@@ -33,10 +34,11 @@ header {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('assets/images/hero-bg.jpg');
+    background-image: url('../images/hero-bg.jpg'); /* Fix the path */
     background-size: cover;
     background-position: center;
     z-index: -2;
+    filter: brightness(0.8); /* Optional: adjust image brightness */
 }
 
 .logo {
@@ -63,32 +65,35 @@ header {
 }
 
 .hero-overlay {
-    position: fixed;  /* Changed from absolute to fixed */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1;
+    background: rgba(0, 0, 0, 0.5); /* Adjust opacity as needed */
+    z-index: 2; /* Set z-index between hero and background */
     pointer-events: none;
 }
 
 .hero {
     position: relative;
-    z-index: 2;
+    z-index: 3; /* Increase z-index */
     max-width: 800px;
+    text-align: center;
 }
 
 .hero h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
     animation: fadeInUp 1s ease;
+    color: #ffffff; /* Explicitly set heading color to white */
 }
 
 .typing-text {
     font-size: 1.5rem;
     margin-bottom: 2rem;
     min-height: 2em;
+    color: #ffffff; /* Set typing text color to white */
 }
 
 .primary-btn {
@@ -443,21 +448,59 @@ footer {
     left: 0;
     right: 0;
     z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-links {
     display: flex;
-    gap: 2rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    /* Ensure proper spacing between links */
+    gap: 3rem; /* Added gap for spacing between links */
+}
+
+/* Hide nav links on small screens by default */
+@media (max-width: 999px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1001;
+    }
+    .nav-links.active {
+        display: flex;
+    }
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+    }
+    .menu-toggle span {
+        width: 25px;
+        height: 3px;
+        background: #333;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
 }
 
 .nav-links a {
@@ -466,6 +509,11 @@ footer {
     font-weight: 500;
     transition: color 0.3s ease;
     position: relative;
+    /* Removed margin-left: 1rem; as gap handles spacing now */
+}
+
+.nav-links a:first-child {
+    margin-left: 0; /* Remove margin for the first link */
 }
 
 .nav-links a::after {
@@ -487,6 +535,15 @@ footer {
     width: 100%;
 }
 
+/* Add these styles */
+.nav-links a.active {
+    color: #007bff;
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
 .skill-chips {
     display: flex;
     flex-wrap: wrap;
@@ -504,27 +561,79 @@ footer {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
-.skill-chip::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 0;
-    background: linear-gradient(90deg, #4299e1, #667eea);
-    transition: width 0.6s ease;
-}
-
-.skill-chip:hover::before {
-    width: var(--percentage);
+.skill-chip:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    z-index: 999;
 }
 
 .skill-chip i {
     color: #4299e1;
 }
+
+.skill-bar-portlet {
+    display: none; /* Keep display none by default */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -45px;
+    background: #222;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    min-width: 140px;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.skill-bar-portlet::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #222;
+}
+
+.skill-chip:hover .skill-bar-portlet {
+    display: flex; /* Change to flex on hover */
+    opacity: 1;
+}
+
+.bar-segment {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    background: #444;
+    transition: background 0.3s ease;
+}
+
+.skill-chip[data-level="1"] .bar-segment:nth-child(-n+1),
+.skill-chip[data-level="2"] .bar-segment:nth-child(-n+2),
+.skill-chip[data-level="3"] .bar-segment:nth-child(-n+3),
+.skill-chip[data-level="4"] .bar-segment:nth-child(-n+4),
+.skill-chip[data-level="5"] .bar-segment:nth-child(-n+5) {
+    background: linear-gradient(90deg, #4299e1, #667eea);
+}
+
+.bar-label {
+    margin-left: 8px;
+    font-size: 0.85em;
+    color: #fff;
+    font-weight: 600;
+}
+
 
 .contact-container {
     display: grid;
@@ -614,14 +723,12 @@ footer {
     transform: translateY(-2px);
 }
 
-@media (max-width: 768px) {
-    .project-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .nav-links {
-        display: none;
-    }
+section {
+    scroll-margin-top: 80px; /* Adjusted to a more reasonable value for navbar height */
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
 }
 
 /* Section Spacing */
@@ -633,17 +740,86 @@ section {
 
 /* Dark Theme Support */
 @media (prefers-color-scheme: dark) {
+    body {
+        background: #1a202c; /* Darker background for dark mode */
+        color: #e2e8f0; /* Lighter text for dark mode */
+    }
+
+    .navbar {
+        background: rgba(26, 32, 44, 0.95); /* Darker navbar for dark mode */
+    }
+
+    .nav-links a {
+        color: #e2e8f0; /* Lighter link color for dark mode */
+    }
+
+    .nav-links a:hover {
+        color: #63b3ed; /* Lighter hover color for dark mode */
+    }
+
+    .logo span {
+        color: #e2e8f0; /* Lighter logo text for dark mode */
+    }
+
+    .hero h1,
+    .typing-text {
+        color: #e2e8f0; /* Lighter hero text for dark mode */
+    }
+
+    .skill-category {
+        background: rgba(255, 255, 255, 0.05); /* Adjusted for dark mode */
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Adjusted for dark mode */
+    }
+
+    .skill-category h3 {
+        color: #e2e8f0; /* Lighter heading for dark mode */
+    }
+
+    .skill-card {
+        background: #2d3748; /* Darker skill card for dark mode */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .skill-card:hover {
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .skill-info h4 {
+        color: #e2e8f0; /* Lighter skill info heading for dark mode */
+    }
+
+    .skill-description {
+        color: #a0aec0; /* Lighter skill description for dark mode */
+    }
+
+    .tech-tag {
+        background: #3a3a3a;
+        color: #dddddd;
+    }
+
+    .contact-method {
+        background: #2d3748; /* Darker contact method for dark mode */
+        color: #e2e8f0; /* Lighter text for dark mode */
+    }
+
+    .floating label {
+        background: #1a202c; /* Darker background for floating label in dark mode */
+        color: #a0aec0; /* Lighter color for floating label in dark mode */
+    }
+
+    .floating input:focus ~ label,
+    .floating input:not(:placeholder-shown) ~ label,
+    .floating textarea:focus ~ label,
+    .floating textarea:not(:placeholder-shown) ~ label {
+        color: #63b3ed; /* Lighter active color for floating label in dark mode */
+    }
+
     .project-card {
         background: #2a2a2a;
     }
     
     .project-content h3 {
         color: #ffffff;
-    }
-    
-    .tech-tag {
-        background: #3a3a3a;
-        color: #dddddd;
     }
 }
 
@@ -678,3 +854,58 @@ section {
 .skill-card:nth-child(n) {
     animation-delay: calc(0.1s * var(--i));
 }
+
+.skill-chip .skill-bar {
+    display: flex;
+    gap: 4px;
+    margin-left: 1rem;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.skill-chip:hover .skill-bar {
+    opacity: 1;
+    pointer-events: auto;
+}
+.bar-segment {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: #e2e8f0;
+    position: relative;
+    transition: background 0.3s;
+}
+.skill-chip[data-level="1"] .bar-segment:nth-child(-n+1),
+.skill-chip[data-level="2"] .bar-segment:nth-child(-n+2),
+.skill-chip[data-level="3"] .bar-segment:nth-child(-n+3),
+.skill-chip[data-level="4"] .bar-segment:nth-child(-n+4),
+.skill-chip[data-level="5"] .bar-segment:nth-child(-n+5) {
+    background: linear-gradient(90deg, #4299e1, #667eea);
+}
+.bar-segment:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    top: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    z-index: 10;
+}
+.bar-label {
+    margin-left: 0.5rem;
+    font-size: 0.9em;
+    color: #4299e1;
+    font-weight: bold;
+    display: none;
+}
+.skill-chip:hover .bar-label {
+    display: inline;
+}
+/* This last block was duplicated several times in your original CSS, only one instance is needed. */
+/* Removing redundant code here to clean up. */
